@@ -2,6 +2,9 @@
 
 Updates to the AS2 Language Support project will be documented here as new versions are released.
 
+## [1.3.5](https://github.com/admvx/as2-language-support/compare/v1.3.4...v1.3.5) - 2021-10-30
+- Finish the document symbols support
+
 ## [1.3.4](https://github.com/admvx/as2-language-support/compare/v1.3.3...v1.3.4) - 2021-10-30
 - Fix an issue with block comment sanitization consuming one character too many, leading to parse errors
 - Refactor extension build tooling, and fix breakpoints in debug sessions

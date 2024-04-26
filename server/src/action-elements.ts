@@ -60,10 +60,23 @@ export class ActionClass {
         let method = <ActionMethod>member;
         this._methods.push(method);
       }
+      
+      this.addChildSymbol(member);
     } else {
       //Consider replacing the existing member in the case of partial updates
       ActionConfig.LOG_LEVEL !== LogLevel.NONE && logIt({ level: LogLevel.VERBOSE, message: `Member ${member.name}, already registered on ${this.shortType}!` });
     }
+  }
+  
+  private addChildSymbol(member:ActionParameter): void {
+    if (member.name === 'this' || member.name === 'super') return;
+    let symbol: DocumentSymbol = {
+      name: member.name,
+      kind: member.isMethod ? SymbolKind.Method : SymbolKind.Field,
+      range: member.locationRange,
+      selectionRange: member.locationRange,
+    };
+    this._symbolChildren.push(symbol);
   }
   
   public registerRegularImport(fullType: string, shortType?: string, skipParse?: boolean): void {
@@ -159,7 +172,7 @@ export class ActionClass {
     }
     this._importMap[this.shortType] = this.fullType;
     this.baseUri = DirectoryUtility.fileUriAndTypeToBaseUri(this.fileUri, this.fullType);
-    this._symbolTree = { name: this.shortType, kind: SymbolKind.Class, range: this.fullRange, selectionRange: this.locationRange };
+    this._symbolTree = { name: this.shortType, kind: SymbolKind.Class, range: this.fullRange, selectionRange: this.locationRange, children: this._symbolChildren };
   }
   
   public get publicInstanceMembers(): ActionParameter[] { return this._publicInstanceMembers; }
